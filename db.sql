@@ -9,6 +9,7 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     role ENUM('customer','admin','shipper') DEFAULT 'customer',
     reward_points INT DEFAULT 0,
+    refresh_token VARCHAR(255) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -132,6 +133,8 @@ CREATE TABLE orders (
     status ENUM('pending','confirmed','delivering','completed','cancelled') DEFAULT 'pending',
     payment_status ENUM('unpaid','paid') DEFAULT 'unpaid',
     address TEXT,
+    latitude DECIMAL(10, 8) NULL,
+    longitude DECIMAL(11, 8) NULL,
     voucher_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
@@ -153,6 +156,10 @@ CREATE TABLE order_items (
 CREATE TABLE order_tracking (
     id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT,
+    latitude DECIMAL(10, 8) NULL,
+    longitude DECIMAL(11, 8) NULL,
+    note TEXT NULL,
+    image_proof VARCHAR(255) NULL, -- Link ảnh WebP bằng chứng giao hàng
     status ENUM('pending','confirmed','delivering','completed','cancelled'),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES orders(id)
